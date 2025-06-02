@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "752628872813",
+    "project_id": "vampire-gardener",
+    "storage_bucket": "vampire-gardener.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752628872813:android:4e55bdaaea2a7f64153164",
+        "android_client_info": {
+          "package_name": "com.example.kurssovai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDtf0ogy8KB5pgU8tFMqt9OTIzo_FvTus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
