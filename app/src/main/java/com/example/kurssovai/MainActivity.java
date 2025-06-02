@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,5 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadDollEditorFragment() {
         loadFragmentWithBackStack(new DollEditorFragment());
+    }
+
+    public void loadDollEditorFragment2(String dollId) {
+        Log.d("LOAD", "Loading editor for doll: " + dollId);
+
+        DollEditorFragment fragment = DollEditorFragment.newInstance(dollId);
+        loadFragmentWithBackStack(fragment);
     }
 }

@@ -24,6 +24,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
@@ -45,6 +46,11 @@ dependencies {
     implementation libs.firebase.firestore
     implementation libs.firebase.auth
     implementation libs.firebase.storage
+    implementation libs.play.services.base
+    implementation libs.play.services.base.v1840
+    implementation libs.play.services.basement
+    implementation libs.play.services.tasks
+    coreLibraryDesugaring libs.desugar.jdk.libs
 
     implementation libs.glide
     annotationProcessor libs.compiler
