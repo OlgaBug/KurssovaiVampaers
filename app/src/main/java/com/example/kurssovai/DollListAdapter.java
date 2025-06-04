@@ -2,6 +2,9 @@ package com.example.kurssovai;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,11 +46,14 @@ public class DollListAdapter extends ArrayAdapter<Doll> {
         TextView dollName = convertView.findViewById(R.id.tvDollName);
         TextView printCode = convertView.findViewById(R.id.tvPrintCode);
 
-        // Здесь должна быть загрузка изображения куклы (например, из Firebase Storage)
-        // Вместо этого используем временное изображение
-        Glide.with(context)
-                .load(R.drawable.base_doll)
-                .into(dollImage);
+        // Загружаем превью из Base64 или показываем заглушку
+        if (doll.getPreviewBase64() != null && !doll.getPreviewBase64().isEmpty()) {
+            byte[] decodedBytes = Base64.decode(doll.getPreviewBase64(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            dollImage.setImageBitmap(bitmap);
+        } else {
+            dollImage.setImageResource(R.drawable.base_doll);
+        }
 
         dollName.setText("Кукла #" + (position + 1));
 

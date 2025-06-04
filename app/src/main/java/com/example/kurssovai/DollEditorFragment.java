@@ -1,6 +1,8 @@
 package com.example.kurssovai;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +29,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class DollEditorFragment extends Fragment {
+    private static final int PREVIEW_WIDTH = 200;
+    private static final int PREVIEW_QUALITY = 70; // 70% качества JPEG
     private static final String TYPE_SHIRT = "shirt";
     private static final String TYPE_PANTS = "pants";
     private static final String TYPE_HAIR = "hair";
@@ -374,11 +379,15 @@ public class DollEditorFragment extends Fragment {
 
     private void saveDoll(ProgressBar progressBar) {
         progressBar.setVisibility(View.VISIBLE);
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        // Создаем и сохраняем превью
+        String previewBase64 = createDollPreview();
+        currentDoll.setPreviewBase64(previewBase64);
+
+        // Остальные данные куклы
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Map<String, String> clothingPositions = new HashMap<>();
         for (ClothingItem item : clothingItems) {
-            // Сохраняем оригинальные координаты и размеры (до масштабирования)
             clothingPositions.put(item.id,
                     item.originalX + "," + item.originalY + "," +
                             item.originalWidth + "," + item.originalHeight);
@@ -389,6 +398,7 @@ public class DollEditorFragment extends Fragment {
         currentDoll.setClothingLayers(new ArrayList<>(selectedClothingIds));
         currentDoll.setClothingPositions(clothingPositions);
 
+        // Сохраняем в Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (dollId != null) {
@@ -427,5 +437,49 @@ public class DollEditorFragment extends Fragment {
         Toast.makeText(requireContext(),
                 "Код печати: " + printCode + "\nСохраните его для будущей печати",
                 Toast.LENGTH_LONG).show();
+    }
+
+    private String createDollPreview() {
+        // 1. Создаем полноразмерное изображение
+        Bitmap originalBitmap = createDollImage();
+
+        // 2. Уменьшаем размер (оптимизация для Base64)
+        int previewWidth = 200; // Ширина превью
+        int previewHeight = (int) (originalBitmap.getHeight() * ((float) previewWidth / originalBitmap.getWidth()));
+        Bitmap previewBitmap = Bitmap.createScaledBitmap(
+                originalBitmap,
+                previewWidth,
+                previewHeight,
+                true
+        );
+        originalBitmap.recycle();
+
+        // 3. Сжимаем качество
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos); // JPEG для меньшего размера
+        previewBitmap.recycle();
+
+        // 4. Конвертируем в Base64
+        return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+    }
+
+    // Создает Bitmap из всех слоев куклы
+    private Bitmap createDollImage() {
+        dollContainer.setDrawingCacheEnabled(true);
+        dollContainer.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(
+                dollContainer.getDrawingCache()
+        );
+        dollContainer.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Очищаем все ImageView в контейнере
+        for (ClothingItem item : clothingItems) {
+            item.imageView.setImageDrawable(null);
+        }
+        dollContainer.removeAllViews();
     }
 }

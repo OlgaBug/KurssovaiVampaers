@@ -58,10 +58,6 @@ public class Doll {
         return printCode;
     }
 
-    public void setPrintCode(String printCode) {
-        this.printCode = printCode;
-    }
-
 
     public Map<String, String> getClothingPositions() {
         return clothingPositions;
@@ -69,5 +65,14 @@ public class Doll {
 
     public void setClothingPositions(Map<String, String> clothingPositions) {
         this.clothingPositions = clothingPositions;
+    }
+    private String previewBase64; // Добавляем новое поле
+
+    public String getPreviewBase64() {
+        return previewBase64;
+    }
+
+    public void setPreviewBase64(String previewBase64) {
+        this.previewBase64 = previewBase64;
     }
 }
