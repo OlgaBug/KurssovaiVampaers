@@ -49,16 +49,11 @@ public class DollListFragment extends Fragment {
         dollListView.setAdapter(adapter);
 
         dollListView.setOnItemClickListener((parent, view, position, id) -> {
-            if (!isAdded() || isDetached() || getActivity() == null || getActivity().isFinishing()) {
-                Log.e("LIFECYCLE", "Фрагмент не активен!");
-                return;
+            if (view.findViewById(R.id.btnDelete).isPressed()) {
+                return; // Если да, не обрабатываем клик по элементу
             }
-            if (Looper.myLooper() != Looper.getMainLooper()) {
-                Log.e("THREAD", "Это НЕ главный поток!");
-            } else {
-                Log.d("THREAD", "Это главный UI поток");
-            }
-            Toast.makeText(requireContext(), "Клик обработан", Toast.LENGTH_SHORT).show();
+
+
             Doll selectedDoll = dollList.get(position);
             Log.d("CLICK", "Clicked doll ID: " + selectedDoll.getId());
 

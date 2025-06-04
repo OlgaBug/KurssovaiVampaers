@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:padding="16dp"
     android:background="?android:attr/selectableItemBackground"
+    android:descendantFocusability="blocksDescendants"
 >
 
     <ImageView
@@ -40,8 +41,8 @@
     </LinearLayout>
     <ImageButton
         android:id="@+id/btnDelete"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:src="@android:drawable/ic_menu_delete"

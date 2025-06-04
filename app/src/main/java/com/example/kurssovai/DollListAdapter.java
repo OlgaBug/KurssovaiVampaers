@@ -53,6 +53,8 @@ public class DollListAdapter extends ArrayAdapter<Doll> {
         TextView dollName = convertView.findViewById(R.id.tvDollName);
         TextView printCode = convertView.findViewById(R.id.tvPrintCode);
         ImageView deleteButton = convertView.findViewById(R.id.btnDelete);
+        deleteButton.setFocusable(false);  // Это важно!
+        deleteButton.setClickable(true);
 
         // Загружаем превью из Base64 или показываем заглушку
         if (doll.getPreviewBase64() != null && !doll.getPreviewBase64().isEmpty()) {
