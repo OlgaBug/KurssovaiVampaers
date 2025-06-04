@@ -2,4 +2,9 @@
     <string name="app_name">Kurssovai</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="doll_container_description">Контейнер для отображения куклы</string>
+    <string name="clothing_panel_description">Панель с элементами одежды</string>
+    <string name="save_button">Сохранить</string>
+    <string name="print_button">Печать</string>
+    <string name="loading_indicator">Идет загрузка</string>
 </resources>

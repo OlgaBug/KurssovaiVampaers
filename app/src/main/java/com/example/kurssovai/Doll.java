@@ -1,6 +1,7 @@
 package com.example.kurssovai;
 
 import java.util.List;
+import java.util.Map;
 
 public class Doll {
     private String id;
@@ -8,6 +9,7 @@ public class Doll {
     private String baseDoll;
     private List<String> clothingLayers;
     private String printCode;
+    private Map<String, String> clothingPositions; // Формат: "x,y,width,height"
 
     public Doll() {
         // Пустой конструктор для Firestore
@@ -58,5 +60,14 @@ public class Doll {
 
     public void setPrintCode(String printCode) {
         this.printCode = printCode;
+    }
+
+
+    public Map<String, String> getClothingPositions() {
+        return clothingPositions;
+    }
+
+    public void setClothingPositions(Map<String, String> clothingPositions) {
+        this.clothingPositions = clothingPositions;
     }
 }
