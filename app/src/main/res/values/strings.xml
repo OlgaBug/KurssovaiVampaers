@@ -7,4 +7,6 @@
     <string name="save_button">Сохранить</string>
     <string name="print_button">Печать</string>
     <string name="loading_indicator">Идет загрузка</string>
+    <string name="delete_doll_description">Удалить куклу</string>
+    <string name="doll_image_description">Изображение куклы</string>
 </resources>

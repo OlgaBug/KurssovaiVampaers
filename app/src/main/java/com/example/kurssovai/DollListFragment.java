@@ -90,22 +90,22 @@ public class DollListFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("dolls")
                 .whereEqualTo("userId", userId)
-                .get()
-                .addOnCompleteListener(task -> {
+                .addSnapshotListener((value, error) -> { // Изменяем на addSnapshotListener для автоматического обновления
                     progressBar.setVisibility(View.GONE);
-                    if (task.isSuccessful()) {
-                        dollList.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Doll doll = document.toObject(Doll.class);
-                            doll.setId(document.getId());
-                            dollList.add(doll);
-                        }
-                        ((DollListAdapter) dollListView.getAdapter()).notifyDataSetChanged();
-                    } else {
+                    if (error != null) {
                         Toast.makeText(requireContext(),
-                                "Ошибка загрузки: " + task.getException().getMessage(),
+                                "Ошибка загрузки: " + error.getMessage(),
                                 Toast.LENGTH_SHORT).show();
+                        return;
                     }
+
+                    dollList.clear();
+                    for (QueryDocumentSnapshot document : value) {
+                        Doll doll = document.toObject(Doll.class);
+                        doll.setId(document.getId());
+                        dollList.add(doll);
+                    }
+                    ((DollListAdapter) dollListView.getAdapter()).notifyDataSetChanged();
                 });
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +41,18 @@ public class DollListAdapter extends ArrayAdapter<Doll> {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_doll, parent, false);
         }
 
+        // Проверяем, что позиция существует
+        if (position < 0 || position >= dolls.size()) {
+            return convertView;
+        }
+
         Doll doll = dolls.get(position);
+
 
         ImageView dollImage = convertView.findViewById(R.id.ivDoll);
         TextView dollName = convertView.findViewById(R.id.tvDollName);
         TextView printCode = convertView.findViewById(R.id.tvPrintCode);
+        ImageView deleteButton = convertView.findViewById(R.id.btnDelete);
 
         // Загружаем превью из Base64 или показываем заглушку
         if (doll.getPreviewBase64() != null && !doll.getPreviewBase64().isEmpty()) {
@@ -64,8 +72,39 @@ public class DollListAdapter extends ArrayAdapter<Doll> {
             printCode.setVisibility(View.GONE);
         }
 
+        deleteButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Удаление куклы")
+                    .setMessage("Вы уверены, что хотите удалить эту куклу?")
+                    .setPositiveButton("Удалить", (dialog, which) -> {
+                        // Передаем ID куклы вместо позиции
+                        deleteDoll(doll.getId());
+                    })
+                    .setNegativeButton("Отмена", null)
+                    .show();
+        });
+
         return convertView;
     }
 
-
+    // Измененный метод удаления
+    private void deleteDoll(String dollId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("dolls").document(dollId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Находим куклу по ID и удаляем
+                    for (int i = 0; i < dolls.size(); i++) {
+                        if (dolls.get(i).getId().equals(dollId)) {
+                            dolls.remove(i);
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Кукла удалена", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Ошибка удаления: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
 }
