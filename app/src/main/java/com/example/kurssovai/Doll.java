@@ -75,4 +75,8 @@ public class Doll {
     public void setPreviewBase64(String previewBase64) {
         this.previewBase64 = previewBase64;
     }
+
+    public void setPrintCode(String printCode) {
+        this.printCode = printCode;
+    }
 }

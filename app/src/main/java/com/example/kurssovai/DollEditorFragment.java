@@ -1,5 +1,6 @@
 package com.example.kurssovai;
 
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Base64;
@@ -12,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -433,10 +435,28 @@ public class DollEditorFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         String printCode = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
+        // Сохраняем код в текущую куклу
+        currentDoll.setPrintCode(printCode);
+
+        // Создаем и показываем диалог
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_print_code_dialog, null);
+        TextView tvPrintCode = dialogView.findViewById(R.id.tvPrintCode);
+        Button btnClose = dialogView.findViewById(R.id.btnClose);
+
+        tvPrintCode.setText(printCode);
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .setCancelable(false)
+                .create();
+
+        btnClose.setOnClickListener(v -> {
+            dialog.dismiss();
+            progressBar.setVisibility(View.GONE);
+        });
+
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(requireContext(),
-                "Код печати: " + printCode + "\nСохраните его для будущей печати",
-                Toast.LENGTH_LONG).show();
+        dialog.show();
     }
 
     private String createDollPreview() {
